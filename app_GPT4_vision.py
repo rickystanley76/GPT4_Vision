@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import base64
+from PIL import Image
 
 # Function to encode the image to base64
 def encode_image(image_file):
@@ -9,8 +10,20 @@ def encode_image(image_file):
     base64_image = base64.b64encode(image_file.getvalue()).decode('utf-8')
     return prefix + base64_image
 
-# Streamlit app layout
-st.title("Image Content Description with GPT-4 Vision")
+# Streamlit App
+st.set_page_config(page_title="Image Content Description with Artificial Intelligence", layout="centered", page_icon=":glass:")
+
+# Load the image
+img = Image.open('SmartSearchAI.png')
+st.image(img, width=300)
+
+st.subheader("Image Content Description with Artificial Intelligence")
+
+
+st.info('''Sometimes we have complicated images, like doctors report, technical diagram, flowchart or just an beatiful picture of a nature or city,
+            we would like to know more about explannation of image. 
+            This Application will just help you with that using the Vision Model of GPT4.
+           ''' )
 
 # File uploader widget
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
@@ -41,7 +54,7 @@ if uploaded_file is not None and api_key:
                 "content": [
                     {
                         "type": "text",
-                        "text": "Describe the image in few sentences.."
+                        "text": "Describe the image in detials but using 500 tokens max and in simple English and avoid the technical jargon.."
                     },
                     {
                         "type": "image_url",
@@ -52,7 +65,7 @@ if uploaded_file is not None and api_key:
                 ]
             }
         ],
-        "max_tokens": 300
+        "max_tokens": 500
     }
 
     # Send the request to OpenAI API
